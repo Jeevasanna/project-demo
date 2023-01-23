@@ -1,11 +1,11 @@
 pipeline {
     agent any
     stages {
-       stage('Code checkout') {
-           steps {
-               git branch: 'main', url: 'https://github.com/Jeevasanna/project-demo.git'
-           }
-       }
+//       stage('Code checkout') {
+//            steps {
+//                git branch: 'main', url: 'https://github.com/Jeevasanna/project-demo.git'
+//            }
+//        } 
         stage('Build artifact') {
             steps {
                  sh 'mvn package'
