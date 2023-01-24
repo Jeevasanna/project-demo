@@ -1,0 +1,74 @@
+---
+- hosts: all
+  become: true
+  tasks:
+   - name: 1) Install Java
+     apt:
+      name: openjdk-11-jdk
+      state: present
+   - name: 2) Add the User Tomcat
+     user:
+       name: tomcat
+       shell: /sbin/nologin
+   - name: 3) Get Installer
+     get_url:
+      url: https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.58/bin/apache-tomcat-9.0.58.tar.gz
+      dest: /tmp/
+   - name: 4) copy the file from TMP dir
+     copy:
+      src: /tmp/apache-tomcat-9.0.58.tar.gz
+      dest: /usr/local/
+      remote_src: yes
+   - name: 5) Install the Tomcat
+     unarchive:
+      src: /usr/local/apache-tomcat-9.0.58.tar.gz
+      dest: /usr/local/
+      remote_src: yes
+   - name: 6) Changing the Tomcat File Ownership, Group and Permissions
+     file:
+      path: /usr/local/apache-tomcat-9.0.58
+      owner: tomcat
+      group: tomcat
+      recurse: yes
+      state: directory
+   - name: 7) Make the Tomcat file symbollic
+     file:
+      src: /usr/local/apache-tomcat-9.0.58
+      dest: /usr/local/tomcat9
+      owner: tomcat
+      group: tomcat
+      state: link
+   - name: 8) Create the tomcat.service file
+     file:
+      path: /etc/systemd/system/tomcat.service
+      state: touch
+   - name: 9) Edit the tomcat.service
+     blockinfile:
+        dest: /etc/systemd/system/tomcat.service
+        insertafter:
+        block: |
+          [Unit]
+          Description = Apache Tomcat 9
+          After = syslog.target network.target
+          [Service]
+          User = tomcat
+          Group = tomcat
+          Type = oneshot
+          PIDFile =/usr/local/apache-tomcat-9.0.58/tomcat.pid
+          RemainAfterExit = yes
+          ExecStart =/usr/local/apache-tomcat-9.0.58/bin/startup.sh
+          ExecStop =/usr/local/apache-tomcat-9.0.58/bin/shutdown.sh
+          ExecReStart =/usr/local/apache-tomcat-9.0.58/bin/shutdown.sh;/usr/local/apache-tomcat-9.0.58/bin/startup.sh
+          [Install]
+          WantedBy = multi-user.target
+   - name: 10) chmod 755 tomcat.service
+     file:
+      path: /etc/systemd/system/tomcat.service
+      mode: 0777
+   - name: 11) Start the Tomcat
+     systemd:
+      name: tomcat.service
+      state: started
+      daemon_reload: yes
+      enabled: yes
+...
