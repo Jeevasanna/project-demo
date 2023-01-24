@@ -1,0 +1,20 @@
+---
+- name: deploy any jar file
+  ansible.builtin.get_url:
+    url: https://sanna.jfrog.io/ui/native/demo-libs-release/com/tcs/angularjs/springbootApp/2.0.0/springbootApp-2.0.0.war
+    dest: /opt/tomcat/latest/webapps/springbootApp-2.0.0.war
+    owner: tomcat
+    group: tomcat
+    mode: '0777'  
+    url_username: sannadevops@gmail.com
+    url_password: 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
+  notify:
+    - reload the daemon, enable and start the tomcat service
+
+# handlers file for tomcat
+- name: reload the daemon, enable and start the tomcat service
+  ansible.builtin.systemd:
+    name: 'tomcat.service'
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
