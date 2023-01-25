@@ -5,7 +5,7 @@
     dest: /usr/local/tomcat/webapps/springbootApp-2.0.0.war
     owner: tomcat
     group: tomcat
-    mode: '0777'  
+    mode: 0777
     url_username: sannadevops@gmail.com
     url_password: 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
   
