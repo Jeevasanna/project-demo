@@ -1,7 +1,7 @@
 ---
 - name: deploy any jar file
   get_url:
-    url: https://sanna.jfrog.io/ui/native/demo-libs-release/com/tcs/angularjs/springbootApp/2.0.0/springbootApp-2.0.0.war
+    url: "https://sanna.jfrog.io/ui/native/demo-libs-release/com/tcs/angularjs/springbootApp/2.0.0/springbootApp-2.0.0.war"
     dest: /usr/local/tomcat/webapps/springbootApp-2.0.0.war
     owner: tomcat
     group: tomcat
