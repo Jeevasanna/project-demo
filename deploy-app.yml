@@ -1,6 +1,6 @@
 ---
-- name: deploy
-  hosts: Inventory
+#- name: deploy
+#  hosts: Inventory
   vars:
     myurl: "https://sanna.jfrog.io/ui/native/demo-libs-release/com/tcs/angularjs/springbootApp/2.0.0/springbootApp-2.0.0.war"
     mydest: "/usr/local/tomcat/webapps/springbootApp-2.0.0.war"
